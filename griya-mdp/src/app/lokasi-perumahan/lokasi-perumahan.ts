@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-lokasi-perumahan',
   imports: [CommonModule, RouterLink],
+  standalone: true,
   templateUrl: './lokasi-perumahan.html',
   styleUrl: './lokasi-perumahan.css',
 })
