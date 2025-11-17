@@ -1,6 +1,6 @@
 export interface Housing{
   id: number;
-  name: string;
+  title: string;
   location: string;
   price: number;
   bedrooms: number;
