@@ -7,7 +7,7 @@ import { Contact } from './contact/contact';
 import { Detail } from './detail/detail';
 
 export const routes: Routes = [
-    // Mengatur Halaman Utama Aplikasi
+    //mengatuh halaman utama aplikasi
     {
         path : "",
         component : HomeComponent,
@@ -16,7 +16,7 @@ export const routes: Routes = [
     {
         path : "profile",
         component : Profile,
-        // title : 'Profile Page'
+        //title : 'Profile Page'
     },
     {
         path : "login",
@@ -26,17 +26,17 @@ export const routes: Routes = [
         path : "register",
         component : Register,
     },
-      {
+    {
         path : "contact",
         component : Contact,
     },
-    {
-        path: "property/:id",           // ← Route dengan parameter
+     {
+        path: "property/:id",
         component: Detail,
         title: 'Detail Property - Griya MDP'
     },
     {
-        path: "**",                      // ← Wildcard untuk 404
+        path: "**",
         redirectTo: "",
         pathMatch: 'full'
     }

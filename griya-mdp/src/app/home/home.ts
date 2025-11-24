@@ -1,11 +1,10 @@
-import { HousingServices } from './../services/housing-services';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { LokasiPerumahan } from '../lokasi-perumahan/lokasi-perumahan';
 import { Housing } from '../lokasi-perumahan/housing.model';
+import { HousingService } from '../services/housing.service';
 import { CommonModule } from '@angular/common';
-// import { HOUSING_DATA } from '../data/housing-data';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -13,26 +12,24 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-
-export class Home implements OnInit{
-  //Array untuk data perumahan (bisa diisi dari backend nanti)
+export class Home implements OnInit {
+  // Array untuk data perumahan
   housingList: Housing[] = [];
-
   filteredList: Housing[] = [];
   selectedFilter: string = 'all';
-
+  
   // Search functionality
   searchQuery: string = '';
-
+  
   // Pagination
   currentPage: number = 1;
   itemsPerPage: number = 6;
-
-  // Loading and error state
+  
+  // Loading and error states
   isLoading: boolean = false;
   errorMessage: string = '';
 
-  // Fallback data (jika backend tidak tersedia)
+  // Data fallback jika backend tidak tersedia
   private fallbackData: Housing[] = [
     {
       id: 1,
@@ -168,13 +165,12 @@ export class Home implements OnInit{
       type: 'apartemen',
       description: 'Apartemen modern dengan akses mudah ke berbagai fasilitas kota.',
       postedDays: 1
-    },
+    }
   ];
 
-  constructor(private housingServices: HousingServices) {}
+  constructor(private housingService: HousingService) {}
 
-  ngOnInit(){
-    // this.filteredList = [...this.housingList];
+  ngOnInit() {
     this.loadHousingData();
   }
 
@@ -182,7 +178,7 @@ export class Home implements OnInit{
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.housingServices.getAllHousing().subscribe({
+    this.housingService.getAllHousing().subscribe({
       next: (data) => {
         this.housingList = data;
         this.filteredList = data;
@@ -192,7 +188,7 @@ export class Home implements OnInit{
       error: (err) => {
         console.error('Error loading housing data:', err);
         console.log('Menggunakan data fallback...');
-
+        
         // Gunakan data fallback jika backend tidak tersedia
         this.housingList = this.fallbackData;
         this.filteredList = this.fallbackData;
@@ -202,28 +198,20 @@ export class Home implements OnInit{
     });
   }
 
-  filterByType(type: string){
+  filterByType(type: string) {
     this.selectedFilter = type;
     this.currentPage = 1; // Reset ke halaman pertama saat filter berubah
     this.isLoading = true;
     this.errorMessage = '';
-
-    // Sebelum ada folder backend
-    // if(type === 'all'){
-    //   // Load semia data dari backend
-    //   this.filteredList = [...this.housingList];
-    // }else{
-    //   this.filteredList = this.housingList.filter(h => h.type === type);
-    // }
-
+    
     if (type === 'all') {
       // Load semua data dari backend
-      this.housingServices.getAllHousing().subscribe({
+      this.housingService.getAllHousing().subscribe({
         next: (data) => {
           this.housingList = data;
           this.filteredList = data;
           this.isLoading = false;
-
+          
           // Terapkan search jika ada query
           if (this.searchQuery) {
             this.applySearch();
@@ -234,7 +222,7 @@ export class Home implements OnInit{
           // Fallback ke filter lokal
           this.filteredList = [...this.housingList];
           this.isLoading = false;
-
+          
           // Terapkan search jika ada query
           if (this.searchQuery) {
             this.applySearch();
@@ -243,11 +231,11 @@ export class Home implements OnInit{
       });
     } else {
       // Filter berdasarkan type dari backend
-      this.housingServices.filterHousingByType(type).subscribe({
+      this.housingService.filterHousingByType(type).subscribe({
         next: (data) => {
           this.filteredList = data;
           this.isLoading = false;
-
+          
           // Terapkan search jika ada query
           if (this.searchQuery) {
             this.applySearch();
@@ -258,7 +246,7 @@ export class Home implements OnInit{
           // Fallback ke filter lokal
           this.filteredList = this.housingList.filter(h => h.type === type);
           this.isLoading = false;
-
+          
           // Terapkan search jika ada query
           if (this.searchQuery) {
             this.applySearch();
@@ -268,7 +256,7 @@ export class Home implements OnInit{
     }
   }
 
-  isFilterActive(type: string):boolean{
+  isFilterActive(type: string): boolean {
     return this.selectedFilter === type;
   }
 
@@ -279,23 +267,23 @@ export class Home implements OnInit{
   }
 
   private applySearch() {
-    const query = this.searchQuery.toLocaleLowerCase().trim();
-
+    const query = this.searchQuery.toLowerCase().trim();
+    
     if (!query) {
       // Jika search kosong, kembalikan ke filter saat ini
       this.filterByType(this.selectedFilter);
       return;
     }
 
-    let baseList = this.selectedFilter === 'all'
-      ? this.housingList
+    let baseList = this.selectedFilter === 'all' 
+      ? this.housingList 
       : this.housingList.filter(h => h.type === this.selectedFilter);
 
     this.filteredList = baseList.filter(house => 
-      house.title.toLocaleLowerCase().includes(query) ||
-      house.location.toLocaleLowerCase().includes(query) || 
-      house.description?.toLocaleLowerCase().includes(query) ||
-      house.status.toLocaleLowerCase().includes(query)
+      house.title.toLowerCase().includes(query) ||
+      house.location.toLowerCase().includes(query) ||
+      house.description?.toLowerCase().includes(query) ||
+      house.status.toLowerCase().includes(query)
     );
   }
 
@@ -306,7 +294,7 @@ export class Home implements OnInit{
 
   // Pagination functionality
   get paginatedList(): Housing[] {
-    const start = (this.currentPage - 1) *this.itemsPerPage;
+    const start = (this.currentPage - 1) * this.itemsPerPage;
     return this.filteredList.slice(start, start + this.itemsPerPage);
   }
 
@@ -331,7 +319,7 @@ export class Home implements OnInit{
       this.goToPage(this.currentPage + 1);
     }
   }
-  
+
   previousPage() {
     if (this.currentPage > 1) {
       this.goToPage(this.currentPage - 1);
@@ -346,4 +334,3 @@ export class Home implements OnInit{
     return Math.min(this.currentPage * this.itemsPerPage, this.filteredList.length);
   }
 }
-

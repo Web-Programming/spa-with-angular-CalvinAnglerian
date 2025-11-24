@@ -1,4 +1,4 @@
-export interface Housing{
+export interface Housing {
   id: number;
   title: string;
   location: string;
