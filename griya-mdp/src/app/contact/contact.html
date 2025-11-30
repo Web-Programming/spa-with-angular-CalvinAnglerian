@@ -26,6 +26,7 @@
                   [class.is-invalid]="contactForm.get('nama')?.invalid && contactForm.get('nama')?.touched"
                   placeholder="Masukkan nama lengkap Anda" 
                   required>
+<<<<<<< Updated upstream
                 <div class="invalid-feedback"
                     *ngIf="contactForm.get('nama')?.invalid && contactForm.get('nama')?.touched">
                     <div *ngIf="contactForm.get('nama')?.errors?.['nama']">
@@ -38,6 +39,21 @@
                         *ngIf="!contactForm.get('nama')?.touched || contactForm.get('nama')?.valid">
                         Nama akan digunakan untuk komunikasi lebih lanjut
                     </div>
+=======
+                <div class="invalid-feedback" *ngIf="contactForm.get('fullName')?.invalid && contactForm.get('fullName')?.touched">
+                  <div *ngIf="contactForm.get('fullName')?.errors?.['required']">
+                    Nama lengkap harus diisi
+                  </div>
+                  <div *ngIf="contactForm.get('fullName')?.errors?.['minlength']">
+                    Nama minimal 2 karakter
+                  </div>
+                  <div *ngIf="contactForm.get('fullName')?.errors?.['pattern']">
+                    Nama hanya boleh mengandung huruf dan spasi
+                  </div>
+                </div>
+                <div class="form-text" *ngIf="!contactForm.get('fullName')?.touched || contactForm.get('fullName')?.valid">
+                  Nama akan digunakan untuk komunikasi lebih lanjut
+>>>>>>> Stashed changes
                 </div>
               </div>
 

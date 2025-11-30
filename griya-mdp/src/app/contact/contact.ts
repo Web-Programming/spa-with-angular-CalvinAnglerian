@@ -17,7 +17,11 @@ export class Contact {
 
   constructor(private fb: FormBuilder) {
     this.contactForm = this.fb.group({
+<<<<<<< Updated upstream
       nama: ['', [Validators.required, Validators.minLength(2)]],
+=======
+      fullName: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z\s]*$/)]],
+>>>>>>> Stashed changes
       email: ['', [Validators.required, Validators.email]],
       pesan: ['', [Validators.required, Validators.minLength(10)]], 
     })
