@@ -12,19 +12,37 @@
         <!-- Contact Form Card -->
         <div class="card shadow-lg border-0">
           <div class="card-body p-4 p-md-5">
-            <form>
+            <form [formGroup]="contactForm" (ngSubmit)="submitContact()">
               <!-- Name Input -->
               <div class="mb-4">
-                <label for="fullName" class="form-label fw-semibold">
+                <label for="nama" class="form-label fw-semibold">
                   <i class="bi bi-person-fill me-2"></i>Nama Lengkap
                 </label>
                 <input 
-                  type="text" 
+                  type="contact" 
                   class="form-control form-control-lg" 
-                  id="fullName" 
-                  placeholder="Masukkan nama lengkap Anda"
+                  id="nama" 
+                  formControlName="nama"
+                  [class.is-invalid]="contactForm.get('nama')?.invalid && contactForm.get('nama')?.touched"
+                  placeholder="Masukkan nama lengkap Anda" 
                   required>
-                <div class="form-text">Nama akan digunakan untuk komunikasi lebih lanjut</div>
+                <div class="invalid-feedback"
+                    *ngIf="contactForm.get('nama')?.invalid && contactForm.get('nama')?.touched">
+                    <div *ngIf="contactForm.get('nama')?.errors?.['nama']">
+                        Nama lengkap harus diisi.
+                    </div>
+                    <div *ngIf="contactForm.get('nama')?.errors?.['minlength']">
+                        Min 2 karakter.
+                    </div>
+                    <div class="text-danger" 
+                        *ngIf="contactForm.get('nama')?.hasError('pattern') && contactForm.get('nama')?.touched">
+                        Nama hanya boleh berisi huruf.
+                    </div>
+                </div>
+                    <div class="form-text"
+                        *ngIf="!contactForm.get('nama')?.touched || contactForm.get('nama')?.valid">
+                        Nama akan digunakan untuk komunikasi lebih lanjut.
+                    </div>
               </div>
 
               <!-- Email Input -->
@@ -36,9 +54,23 @@
                   type="email" 
                   class="form-control form-control-lg" 
                   id="email" 
+                  formControlName="email"
+                  [class.is-invalid]="contactForm.get('email')?.invalid && contactForm.get('email')?.touched"
                   placeholder="nama@example.com"
                   required>
-                <div class="form-text">Kami tidak akan membagikan email Anda kepada pihak lain</div>
+                <div class="invalid-feedback"
+                    *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
+                    <div *ngIf="contactForm.get('email')?.errors?.['required']">
+                        Email harus diisi.
+                    </div>
+                    <div *ngIf="contactForm.get('email')?.errors?.['email']">
+                        Format email tidak valid.
+                    </div>
+                </div>
+                <div class="form-text"
+                    *ngIf="!contactForm.get('email')?.touched || contactForm.get('email')?.valid">
+                    Kami tidak akan membagikan email Anda kepada pihak lain.
+                </div>
               </div>
 
               <!-- Phone Input -->
@@ -49,9 +81,19 @@
                 <input 
                   type="tel" 
                   class="form-control form-control-lg" 
-                  id="phone" 
+                  id="phone"
                   placeholder="+62 812-3456-7890"
+                  formControlName="telepon"
+                  [class.is-invalid]="contactForm.get('telepon')?.invalid && contactForm.get('telepon')?.touched"
                   required>
+                <div class="text-danger"
+                    *ngIf="contactForm.get('telepon')?.hasError('required') && contactForm.get('telepon')?.touched">
+                    Nomor telepon wajib diisi.
+                </div>
+                <div class="text-danger"
+                    *ngIf="contactForm.get('telepon')?.hasError('pattern') && contactForm.get('telepon')?.touched">
+                    Nomor telepon hanya boleh berisi angka
+                </div>
               </div>
 
               <!-- Subject Select -->
@@ -71,16 +113,30 @@
 
               <!-- Message Textarea -->
               <div class="mb-4">
-                <label for="message" class="form-label fw-semibold">
+                <label for="pesan" class="form-label fw-semibold">
                   <i class="bi bi-pencil-fill me-2"></i>Pesan
                 </label>
                 <textarea 
                   class="form-control" 
-                  id="message" 
+                  id="pesan" 
+                  formControlName="pesan" 
+                  [class.is-invalid]="contactForm.get('pesan')?.invalid && contactForm.get('pesan')?.touched"
                   rows="5" 
                   placeholder="Tulis pesan Anda di sini..."
                   required></textarea>
-                <div class="form-text">Minimal 10 karakter</div>
+                <div class="invalid-feedback"
+                    *ngIf="contactForm.get('pesan')?.invalid && contactForm.get('pesan')?.touched">
+                    <div *ngIf="contactForm.get('pesan')?.errors?.['required']">
+                        Pesan harus diisi
+                    </div>
+                    <div *ngIf="contactForm.get('pesan')?.errors?.['minlength']">
+                        Pesan minimal 10 karakter
+                    </div>
+                </div>
+                <div class="form-text"
+                    *ngIf="!contactForm.get('pesan')?.touched || contactForm.get('pesan')?.valid">  
+                    Minimal 10 karakter
+                </div>
               </div>
 
               <!-- Newsletter Checkbox -->
@@ -95,7 +151,7 @@
 
               <!-- Submit Button -->
               <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg py-3">
+                <button type="submit" class="btn btn-primary btn-lg py-3" [disabled]="contactForm.invalid">
                   <i class="bi bi-send-fill me-2"></i>Kirim Pesan
                 </button>
                 <button type="reset" class="btn btn-outline-secondary">
@@ -152,7 +208,6 @@
             <strong>Jam Operasional:</strong> Senin - Jumat: 09:00 - 17:00 WIB | Sabtu: 09:00 - 14:00 WIB
           </div>
         </div>
-
       </div>
     </div>
   </div>
